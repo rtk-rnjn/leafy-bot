@@ -14,13 +14,10 @@ class Meme(commands.Cog):
     @commands.command(description="Shows a random meme")
     async def meme(self, ctx):
         #
-        URL = f"https://meme-api.herokuapp.com/gimme"
+        URL = "https://meme-api.herokuapp.com/gimme"
 
         def check_valid_status_code(request):
-            if request.status_code == 200:
-                return request.json()
-
-            return False
+            return request.json() if request.status_code == 200 else False
 
         def get_meme():
             request = requests.get(URL)

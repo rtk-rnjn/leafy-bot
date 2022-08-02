@@ -70,10 +70,7 @@ class Fun(commands.Cog):
     async def fml(self, ctx):
         url = "https://api.alexflipnote.dev/fml"
         async with aiohttp.ClientSession() as cs:
-            async with cs.get(
-                url,
-                headers={"Authorization": f"FDGsCH8Kg3uEDyVBg-hJU16nH8s9Cl9Yr2hWG6Be"},
-            ) as res:
+            async with cs.get(url, headers={"Authorization": "FDGsCH8Kg3uEDyVBg-hJU16nH8s9Cl9Yr2hWG6Be"}) as res:
                 response = await res.json()
                 resp = response["text"]
                 embed = discord.Embed(

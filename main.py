@@ -35,10 +35,10 @@ async def get_prefix(client, message):
         updated = {"guild": message.guild.id, "prefix": "--"}
         await predb.insert_one(updated)
         extras = "--"
-        return commands.when_mentioned_or(extras)(client, message)
     else:
         extras = stats["prefix"]
-        return commands.when_mentioned_or(extras)(client, message)
+
+    return commands.when_mentioned_or(extras)(client, message)
 
 
 client = commands.AutoShardedBot(
@@ -146,15 +146,9 @@ async def reload(ctx, extension):
 
 @client.event
 async def on_message(msg):
-    if (
-        msg.content == "<@791888515100573727>"
-        or msg.content == "<@!791888515100573727>"
-    ):
+    if msg.content in ["<@791888515100573727>", "<@!791888515100573727>"]:
         stats = await predb.find_one({"guild": msg.guild.id})
-        if stats is None:
-            pref = "--"
-        else:
-            pref = stats["prefix"]
+        pref = "--" if stats is None else stats["prefix"]
         embed = discord.Embed(color=0xFF0000)
         embed.set_author(
             name=f"My prefix is `{pref}` and use `{pref}help` to see all commands",

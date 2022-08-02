@@ -15,17 +15,14 @@ class Agify(commands.Cog):
 
     @commands.command(description="Guess age of given name")
     async def ga(self, ctx, name):
-        if name == None:
+        if name is None:
             await ctx.send("You forgot name")
         else:
             name = str(name)
             URL = f"https://api.agify.io/?name={name}"
 
             def check_valid_status_code(request):
-                if request.status_code == 200:
-                    return request.json()
-
-                return False
+                return request.json() if request.status_code == 200 else False
 
             def get_age():
                 request = requests.get(URL)

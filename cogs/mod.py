@@ -76,16 +76,14 @@ class Mod(commands.Cog):
             await ctx.send("**You cannot kick bot**")
         elif member == ctx.author:
             await ctx.send("**You cannot kick yourself**")
-        else:
-
-            if member.top_role < ctx.author.top_role:
-                await member.kick(reason=reason)
-                embed = discord.Embed(
-                    title="Kick",
-                    description=f"{member.name} has been kicked by {ctx.author.name}",
-                    color=0xFF000,
-                )
-                await ctx.send(embed=embed)
+        elif member.top_role < ctx.author.top_role:
+            await member.kick(reason=reason)
+            embed = discord.Embed(
+                title="Kick",
+                description=f"{member.name} has been kicked by {ctx.author.name}",
+                color=0xFF000,
+            )
+            await ctx.send(embed=embed)
 
     @commands.command(
         description="Softbans a member ( Unban after ban to clear chat , to clear chat )"
@@ -151,15 +149,12 @@ class Mod(commands.Cog):
                     description=f"{user.name} has been muted",
                     color=0xFF000,
                 )
-                await ctx.send(embed=embed)
-
             elif role in user.roles:
                 embed = discord.Embed(
                     title="Invalid usage",
                     description="User is already muted",
                     color=0xFF000,
                 )
-                await ctx.send(embed=embed)
             else:
                 await user.add_roles(role)
                 embed = discord.Embed(
@@ -167,7 +162,8 @@ class Mod(commands.Cog):
                     description=f"{user.name} has been muted",
                     color=0xFF000,
                 )
-                await ctx.send(embed=embed)
+
+            await ctx.send(embed=embed)
 
     @commands.command(description="Unmute the muted member")
     @commands.has_permissions(manage_roles=True)
@@ -259,11 +255,6 @@ class Mod(commands.Cog):
                 description="This channel is already locked",
                 color=0xFF000,
             )
-            embed.set_footer(
-                text=f"Requested By: {ctx.author.name}",
-                icon_url=f"{ctx.author.avatar_url}",
-            )
-            await ctx.send(embed=embed)
         else:
             channel = ctx.channel
             overwrite = channel.overwrites_for(ctx.guild.default_role)
@@ -274,11 +265,12 @@ class Mod(commands.Cog):
                 description="This channel is now Locked",
                 color=0xFF000,
             )
-            embed.set_footer(
-                text=f"Requested By: {ctx.author.name}",
-                icon_url=f"{ctx.author.avatar_url}",
-            )
-            await ctx.send(embed=embed)
+
+        embed.set_footer(
+            text=f"Requested By: {ctx.author.name}",
+            icon_url=f"{ctx.author.avatar_url}",
+        )
+        await ctx.send(embed=embed)
 
     @commands.command(description="Unlocks the locked channel")
     @commands.has_permissions(manage_channels=True)
@@ -291,11 +283,6 @@ class Mod(commands.Cog):
                 description="This channel is already unlocked",
                 color=0xFF000,
             )
-            embed.set_footer(
-                text=f"Requested By: {ctx.author.name}",
-                icon_url=f"{ctx.author.avatar_url}",
-            )
-            await ctx.send(embed=embed)
         else:
             channel = ctx.channel
             overwrite = channel.overwrites_for(ctx.guild.default_role)
@@ -306,11 +293,12 @@ class Mod(commands.Cog):
                 description="This channel is now unlocked",
                 color=0xFF000,
             )
-            embed.set_footer(
-                text=f"Requested By: {ctx.author.name}",
-                icon_url=f"{ctx.author.avatar_url}",
-            )
-            await ctx.send(embed=embed)
+
+        embed.set_footer(
+            text=f"Requested By: {ctx.author.name}",
+            icon_url=f"{ctx.author.avatar_url}",
+        )
+        await ctx.send(embed=embed)
 
     @commands.command(description="Blocks a user from sending message in that channel")
     @commands.has_permissions(kick_members=True)
@@ -331,7 +319,6 @@ class Mod(commands.Cog):
                     description=f"{member.mention} is already blocked",
                     color=0xFF000,
                 )
-                await ctx.send(embed=embed)
             else:
                 #
                 await ctx.channel.set_permissions(member, send_messages=False)
@@ -340,7 +327,8 @@ class Mod(commands.Cog):
                     description=f"{member.mention} is blocked by {ctx.author.name}",
                     color=0xFF000,
                 )
-                await ctx.send(embed=embed)
+
+            await ctx.send(embed=embed)
 
     @commands.command(description="Unblocks the blocked user")
     @commands.has_permissions(kick_members=True)
@@ -351,8 +339,6 @@ class Mod(commands.Cog):
                 description=f"{member.mention} is already unblocked",
                 color=0xFF000,
             )
-            await ctx.send(embed=embed)
-
         else:
             await ctx.channel.set_permissions(member, send_messages=True)
             embed = discord.Embed(
@@ -360,14 +346,14 @@ class Mod(commands.Cog):
                 description=f"{member.mention} is unblocked by {ctx.author.name}",
                 color=0xFF000,
             )
-            await ctx.send(embed=embed)
+
+        await ctx.send(embed=embed)
 
     @commands.command(description="Nukes a channel ( Clone and delete ) ")
     @commands.has_permissions(manage_channels=True)
     async def nuke(self, ctx, channel_name):
         channel_id = int("".join(i for i in channel_name if i.isdigit()))
-        existing_channel = self.client.get_channel(channel_id)
-        if existing_channel:
+        if existing_channel := self.client.get_channel(channel_id):
             await existing_channel.clone(reason="Has been nuked")
             await existing_channel.delete()
             embed = discord.Embed(

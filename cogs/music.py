@@ -63,7 +63,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.uploader = data.get("uploader")
         self.uploader_url = data.get("uploader_url")
         date = data.get("upload_date")
-        self.upload_date = date[6:8] + "." + date[4:6] + "." + date[0:4]
+        self.upload_date = f"{date[6:8]}.{date[4:6]}." + date[:4]
         self.title = data.get("title")
         self.thumbnail = data.get("thumbnail")
         self.description = data.get("description")
@@ -90,28 +90,21 @@ class YTDLSource(discord.PCMVolumeTransformer):
         data = await loop.run_in_executor(None, partial)
 
         if data is None:
-            raise YTDLError("Couldn't find anything that matches `{}`".format(search))
+            raise YTDLError(f"Couldn't find anything that matches `{search}`")
 
         if "entries" not in data:
             process_info = data
         else:
-            process_info = None
-            for entry in data["entries"]:
-                if entry:
-                    process_info = entry
-                    break
-
+            process_info = next((entry for entry in data["entries"] if entry), None)
             if process_info is None:
-                raise YTDLError(
-                    "Couldn't find anything that matches `{}`".format(search)
-                )
+                raise YTDLError(f"Couldn't find anything that matches `{search}`")
 
         webpage_url = process_info["webpage_url"]
         partial = functools.partial(cls.ytdl.extract_info, webpage_url, download=False)
         processed_info = await loop.run_in_executor(None, partial)
 
         if processed_info is None:
-            raise YTDLError("Couldn't fetch `{}`".format(webpage_url))
+            raise YTDLError(f"Couldn't fetch `{webpage_url}`")
 
         if "entries" not in processed_info:
             info = processed_info
@@ -121,9 +114,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
                 try:
                     info = processed_info["entries"].pop(0)
                 except IndexError:
-                    raise YTDLError(
-                        "Couldn't retrieve any matches for `{}`".format(webpage_url)
-                    )
+                    raise YTDLError(f"Couldn't retrieve any matches for `{webpage_url}`")
 
         return cls(
             ctx, discord.FFmpegPCMAudio(info["url"], **cls.FFMPEG_OPTIONS), data=info
@@ -137,13 +128,13 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         duration = []
         if days > 0:
-            duration.append("{} days".format(days))
+            duration.append(f"{days} days")
         if hours > 0:
-            duration.append("{} hours".format(hours))
+            duration.append(f"{hours} hours")
         if minutes > 0:
-            duration.append("{} minutes".format(minutes))
+            duration.append(f"{minutes} minutes")
         if seconds > 0:
-            duration.append("{} seconds".format(seconds))
+            duration.append(f"{seconds} seconds")
 
         return ", ".join(duration)
 
@@ -156,7 +147,7 @@ class Song:
         self.requester = source.requester
 
     def create_embed(self):
-        embed = (
+        return (
             discord.Embed(
                 title="Now playing",
                 description="```css\n{0.source.title}\n```".format(self),
@@ -166,12 +157,12 @@ class Song:
             .add_field(name="Requested by", value=self.requester.mention)
             .add_field(
                 name="Uploader",
-                value="[{0.source.uploader}]({0.source.uploader_url})".format(self),
+                value="[{0.source.uploader}]({0.source.uploader_url})".format(
+                    self
+                ),
             )
             .add_field(name="URL", value="[Click]({0.source.url})".format(self))
         )
-
-        return embed
 
 
 class SongQueue(asyncio.Queue):
@@ -305,7 +296,7 @@ class Music(commands.Cog):
     async def cog_command_error(
         self, ctx: commands.Context, error: commands.CommandError
     ):
-        await ctx.send("An error occurred: {}".format(str(error)))
+        await ctx.send(f"An error occurred: {str(error)}")
 
     @commands.command(name="join", invoke_without_subcommand=True)
     async def _join(self, ctx: commands.Context):
@@ -407,9 +398,7 @@ class Music(commands.Cog):
                 await ctx.message.add_reaction("⏭")
                 ctx.voice_state.skip()
             else:
-                await ctx.send(
-                    "Skip vote added, currently at **{}/3**".format(total_votes)
-                )
+                await ctx.send(f"Skip vote added, currently at **{total_votes}/3**")
 
         else:
             await ctx.send("You have already voted to skip this song.")
@@ -426,15 +415,15 @@ class Music(commands.Cog):
         start = (page - 1) * items_per_page
         end = start + items_per_page
 
-        queue = ""
-        for i, song in enumerate(ctx.voice_state.songs[start:end], start=start):
-            queue += "`{0}.` [**{1.source.title}**]({1.source.url})\n".format(
-                i + 1, song
-            )
+        queue = "".join(
+            "`{0}.` [**{1.source.title}**]({1.source.url})\n".format(i + 1, song)
+            for i, song in enumerate(ctx.voice_state.songs[start:end], start=start)
+        )
 
         embed = discord.Embed(
-            description="**{} tracks:**\n\n{}".format(len(ctx.voice_state.songs), queue)
-        ).set_footer(text="Viewing page {}/{}".format(page, pages))
+            description=f"**{len(ctx.voice_state.songs)} tracks:**\n\n{queue}"
+        ).set_footer(text=f"Viewing page {page}/{pages}")
+
         await ctx.send(embed=embed)
 
     @commands.command(name="shuffle")
@@ -467,12 +456,12 @@ class Music(commands.Cog):
                     ctx, search, loop=self.client.loop
                 )
             except YTDLError as e:
-                await ctx.send("**An error occured **: {}".format(str(e)))
+                await ctx.send(f"**An error occured **: {str(e)}")
             else:
                 song = Song(source)
 
                 await ctx.voice_state.songs.put(song)
-                await ctx.send("Enqueued {}".format(str(source)))
+                await ctx.send(f"Enqueued {str(source)}")
 
     @_join.before_invoke
     @_play.before_invoke
@@ -480,9 +469,11 @@ class Music(commands.Cog):
         if not ctx.author.voice or not ctx.author.voice.channel:
             raise commands.CommandError("You are not connected to any voice channel.")
 
-        if ctx.voice_client:
-            if ctx.voice_client.channel != ctx.author.voice.channel:
-                raise commands.CommandError("Bot is already in a voice channel.")
+        if (
+            ctx.voice_client
+            and ctx.voice_client.channel != ctx.author.voice.channel
+        ):
+            raise commands.CommandError("Bot is already in a voice channel.")
 
 
 def setup(client):

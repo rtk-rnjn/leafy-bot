@@ -27,10 +27,7 @@ class Help(commands.Cog):
     @commands.command()
     async def help(self, ctx, choice=None):
         stats = await predb.find_one({"guild": ctx.guild.id})
-        if stats is None:
-            a = "--"
-        else:
-            a = stats["prefix"]
+        a = "--" if stats is None else stats["prefix"]
         if choice is None:
             embed = discord.Embed(
                 timestamp=ctx.message.created_at,
@@ -38,8 +35,9 @@ class Help(commands.Cog):
                 color=0xFF0000,
             )
             embed.set_author(
-                name=f"Leafy Help Commands", icon_url=self.client.user.avatar_url
+                name="Leafy Help Commands", icon_url=self.client.user.avatar_url
             )
+
 
             embed.set_footer(
                 text=f"Requested By: {ctx.author.name}",
@@ -55,8 +53,9 @@ class Help(commands.Cog):
                 color=0xFF0000,
             )
             embed.set_author(
-                name=f"Leafy General Commands", icon_url=self.client.user.avatar_url
+                name="Leafy General Commands", icon_url=self.client.user.avatar_url
             )
+
 
             embed.set_footer(
                 text=f"Requested By: {ctx.author.name}",
@@ -72,8 +71,10 @@ class Help(commands.Cog):
                 color=0xFF0000,
             )
             embed.set_author(
-                name=f"Leafy Moderation Commands", icon_url=self.client.user.avatar_url
+                name="Leafy Moderation Commands",
+                icon_url=self.client.user.avatar_url,
             )
+
 
             embed.set_footer(
                 text=f"Requested By: {ctx.author.name}",
@@ -89,8 +90,9 @@ class Help(commands.Cog):
                 color=0xFF0000,
             )
             embed.set_author(
-                name=f"Leafy Fun Commands", icon_url=self.client.user.avatar_url
+                name="Leafy Fun Commands", icon_url=self.client.user.avatar_url
             )
+
 
             embed.set_footer(
                 text=f"Requested By: {ctx.author.name}",
@@ -106,8 +108,9 @@ class Help(commands.Cog):
                 color=0xFF0000,
             )
             embed.set_author(
-                name=f"Leafy Info Commands", icon_url=self.client.user.avatar_url
+                name="Leafy Info Commands", icon_url=self.client.user.avatar_url
             )
+
 
             embed.set_footer(
                 text=f"Requested By: {ctx.author.name}",
@@ -123,8 +126,9 @@ class Help(commands.Cog):
                 color=0xFF0000,
             )
             embed.set_author(
-                name=f"Leafy Music Commands", icon_url=self.client.user.avatar_url
+                name="Leafy Music Commands", icon_url=self.client.user.avatar_url
             )
+
 
             embed.set_footer(
                 text=f"Requested By: {ctx.author.name}",
@@ -140,8 +144,9 @@ class Help(commands.Cog):
                 color=0xFF0000,
             )
             embed.set_author(
-                name=f"Leafy Setup Commands", icon_url=self.client.user.avatar_url
+                name="Leafy Setup Commands", icon_url=self.client.user.avatar_url
             )
+
 
             embed.set_footer(
                 text=f"Requested By: {ctx.author.name}",
@@ -157,8 +162,9 @@ class Help(commands.Cog):
                 color=0xFF0000,
             )
             embed.set_author(
-                name=f"Leafy Extra Commands", icon_url=self.client.user.avatar_url
+                name="Leafy Extra Commands", icon_url=self.client.user.avatar_url
             )
+
 
             embed.set_footer(
                 text=f"Requested By: {ctx.author.name}",

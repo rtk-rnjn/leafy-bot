@@ -24,9 +24,10 @@ class Suggestion(commands.Cog):
         )
         embed.add_field(name="Suggestion", value=msg)
         embed.set_footer(
-            text=f"Wait until your suggestion is approved",
+            text="Wait until your suggestion is approved",
             icon_url=f"{ctx.author.avatar_url}",
         )
+
         message = await channel_only.send(embed=embed)
         await message.add_reaction(up)
         await message.add_reaction(down)

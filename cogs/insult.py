@@ -14,34 +14,18 @@ class Fancy(commands.Cog):
 
     @commands.command(description="Roasts :)")
     async def roast(self, ctx, member: discord.Member = None):
-        if member == None:
+        if member is None:
             member = ctx.author
-            async with aiohttp.ClientSession() as session:
-                async with session.get(
-                    f"https://insult.mattbas.org/api/insult"
-                ) as response:
-                    insult = await response.text()
-                    embed = discord.Embed(
-                        timestamp=ctx.message.created_at,
-                        title=f"{member.name}",
-                        description=f"{insult}",
-                        color=0xFF0000,
-                    )
-                    await ctx.send(embed=embed)
-
-        else:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(
-                    f"https://insult.mattbas.org/api/insult"
-                ) as response:
-                    insult = await response.text()
-                    embed = discord.Embed(
-                        timestamp=ctx.message.created_at,
-                        title=f"{member.name}",
-                        description=f"{insult}",
-                        color=0xFF0000,
-                    )
-                    await ctx.send(embed=embed)
+        async with aiohttp.ClientSession() as session:
+            async with session.get("https://insult.mattbas.org/api/insult") as response:
+                insult = await response.text()
+                embed = discord.Embed(
+                    timestamp=ctx.message.created_at,
+                    title=f"{member.name}",
+                    description=f"{insult}",
+                    color=0xFF0000,
+                )
+                await ctx.send(embed=embed)
 
 
 def setup(client):

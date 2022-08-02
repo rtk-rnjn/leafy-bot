@@ -68,8 +68,9 @@ class Note(commands.Cog):
 
         else:
             embed = discord.Embed(
-                title="Notes", description=f"Here are your notes", color=0xFF0000
+                title="Notes", description="Here are your notes", color=0xFF0000
             )
+
             x = notedb.find({"id": ctx.author.id})
             z = 1
             async for i in x:

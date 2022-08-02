@@ -14,12 +14,13 @@ class Slowmode(commands.Cog):
     @commands.has_permissions(manage_channels=True)
     async def slowmode(self, ctx, seconds: int):
         if seconds <= 21600 and seconds > 0:
-            embed = discord.Embed(Title=f"Slowmode ", color=0xFF0000)
+            embed = discord.Embed(Title="Slowmode ", color=0xFF0000)
 
             embed.add_field(
-                name=f"Slowmode Changed !",
+                name="Slowmode Changed !",
                 value=f"Slowmode is now set to {seconds} seconds",
             )
+
             embed.set_image(
                 url="https://media1.tenor.com/images/27b559e217424b733741a34f4a5c24c6/tenor.gif"
             )
@@ -40,9 +41,9 @@ class Slowmode(commands.Cog):
     @commands.has_permissions(manage_channels=True)
     async def resetslow(self, ctx):
 
-        embed = discord.Embed(Title=f"Slowmode ", color=0xFF0000)
+        embed = discord.Embed(Title="Slowmode ", color=0xFF0000)
 
-        embed.add_field(name=f"Slowmode Changed !", value=f"Slowmode is now set to 0")
+        embed.add_field(name="Slowmode Changed !", value="Slowmode is now set to 0")
 
         embed.set_footer(
             text=f"Requested By: {ctx.author.name}", icon_url=f"{ctx.author.avatar_url}"

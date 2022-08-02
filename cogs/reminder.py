@@ -32,20 +32,20 @@ class Remind(commands.Cog):
 
             if len(desc) < 50:
                 typ = ttime[-1]
-                ttime = int(ttime[0:-1])
+                ttime = int(ttime[:-1])
                 choices = ["s", "m", "h", "d"]
                 if typ not in choices:
                     await ctx.send("**Only s(seconds), m(minutes),h(hours),d(days)**")
                 else:
-                    if typ == "s":
-                        conv = ttime
-                    elif typ == "m":
-                        conv = ttime * 60
-                    elif typ == "h":
-                        conv = ttime * 3600
-                    elif typ == "d":
+                    if typ == "d":
                         conv = ttime * 86400
 
+                    elif typ == "h":
+                        conv = ttime * 3600
+                    elif typ == "m":
+                        conv = ttime * 60
+                    elif typ == "s":
+                        conv = ttime
                     if conv > 604800:
                         await ctx.send("**Not more than 7 days**")
                     else:
@@ -77,8 +77,6 @@ class Remind(commands.Cog):
                     person = x["id"]
                     await channel_only.send(f"{person} **Reminder :** {desc}")
                     await reminder.delete_one(x)
-                else:
-                    pass
         except Exception:
             pass
 

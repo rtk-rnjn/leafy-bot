@@ -26,10 +26,8 @@ class Fancy(commands.Cog):
                     await ctx.send(f"{ctx.author.mention}")
                     await ctx.message.delete()
 
-        elif len(ascii_text) > 12:
-            await ctx.send("Bruh why more than 12 characters? Tell me why?")
         else:
-            await ctx.send("Something Went Wrong")
+            await ctx.send("Bruh why more than 12 characters? Tell me why?")
 
 
 def setup(client):

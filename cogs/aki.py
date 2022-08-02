@@ -77,7 +77,7 @@ class GuessName(commands.Cog):
             )
 
         correct = await self.client.wait_for("message", check=check)
-        if correct.content.lower() == "yes" or correct.content.lower() == "y":
+        if correct.content.lower() in ["yes", "y"]:
             embed = discord.Embed(title="Yay! I guessed it right", color=0xFF0000)
             await ctx.send(embed=embed)
         else:

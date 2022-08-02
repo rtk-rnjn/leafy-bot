@@ -28,10 +28,7 @@ class NewInfo(commands.Cog):
     @commands.command(aliases=["si", "serverinfo"])
     async def server(self, ctx):
         stats = await predb.find_one({"guild": ctx.guild.id})
-        if stats is None:
-            pre = "--"
-        else:
-            pre = stats["prefix"]
+        pre = "--" if stats is None else stats["prefix"]
         own = ctx.guild.owner
         reg = str(ctx.guild.region)
         ver = str(ctx.guild.verification_level)
@@ -56,7 +53,7 @@ class NewInfo(commands.Cog):
             name="<a:devcheck:799178026729734166> Verification",
             value=f"Level -{ver.capitalize()}",
         )
-        embed.add_field(name=":calendar: Created At", value=f"{tim[0:11]}")
+        embed.add_field(name=":calendar: Created At", value=f"{tim[:11]}")
         embed.add_field(
             name="<:channels:799230731397890049> Text Channels", value=f"{txt}"
         )
@@ -79,10 +76,7 @@ class NewInfo(commands.Cog):
         ser = len(self.client.guilds)
         mem = len(self.client.users)
         stats = await predb.find_one({"guild": ctx.guild.id})
-        if stats is None:
-            pre = "--"
-        else:
-            pre = stats["prefix"]
+        pre = "--" if stats is None else stats["prefix"]
         embed = discord.Embed(
             timestamp=ctx.message.created_at, title=":robot:  Bot Info", color=0xFF0000
         )
@@ -116,12 +110,10 @@ class NewInfo(commands.Cog):
 
     @commands.command(aliases=["ui", "userinfo"])
     async def user(self, ctx, member: discord.Member = None):
-        if member == None:
+        if member is None:
             member = ctx.author
-        else:
-            pass
-        c = str(member.created_at)[0:11]
-        j = str(member.joined_at)[0:11]
+        c = str(member.created_at)[:11]
+        j = str(member.joined_at)[:11]
         embed = discord.Embed(
             timestamp=ctx.message.created_at,
             title="<a:devstar:799173767707885588> User Info",

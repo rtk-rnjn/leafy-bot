@@ -15,17 +15,14 @@ class Ipfy(commands.Cog):
         aliases=["ip"], description="Shows the info about the given ip/webiste"
     )
     async def ipinfo(self, ctx, ip_address):
-        if ip_address == None:
+        if ip_address is None:
             await ctx.send("You forgot ip")
         else:
             # ip_address = int(ip_address)
             URL = f"http://ip-api.com/json/{ip_address}?fields=17000447"
 
             def check_valid_status_code(request):
-                if request.status_code == 200:
-                    return request.json()
-
-                return False
+                return request.json() if request.status_code == 200 else False
 
             def get_info():
                 request = requests.get(URL)

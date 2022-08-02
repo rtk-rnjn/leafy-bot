@@ -29,7 +29,7 @@ class Errors(commands.Cog):
                 for perm in error.missing_perms
             ]
             if len(missing) > 2:
-                fmt = "{}, and {}".format("**, **".join(missing[:-1]), missing[-1])
+                fmt = f'{"**, **".join(missing[:-1])}, and {missing[-1]}'
             else:
                 fmt = " and ".join(missing)
 
@@ -59,7 +59,7 @@ class Errors(commands.Cog):
                 for perm in error.missing_perms
             ]
             if len(missing) > 2:
-                fmt = "{}, and {}".format("**, **".join(missing[:-1]), missing[-1])
+                fmt = f'{"**, **".join(missing[:-1])}, and {missing[-1]}'
             else:
                 fmt = " and ".join(missing)
             embed = discord.Embed(
@@ -73,9 +73,10 @@ class Errors(commands.Cog):
         if isinstance(error, commands.UserInputError):
             embed = discord.Embed(
                 title="Invalid Input",
-                description=f"Maybe you forgot to specify inputs or gave an extra input",
+                description="Maybe you forgot to specify inputs or gave an extra input",
                 color=0xFF0000,
             )
+
             await ctx.send(embed=embed)
             return
 
@@ -89,9 +90,10 @@ class Errors(commands.Cog):
             try:
                 embed = discord.Embed(
                     title="Forbidden",
-                    description=f"Error - 403 - Forbidden | Missing perms",
+                    description="Error - 403 - Forbidden | Missing perms",
                     color=0xFF0000,
                 )
+
                 await ctx.send(embed=embed)
             except:
                 print("Failed forbidden")
@@ -100,13 +102,14 @@ class Errors(commands.Cog):
         if isinstance(error, commands.CheckFailure):
             embed = discord.Embed(
                 title="Permissions Not Satisfied",
-                description=f"You do not have permissions to use this command",
+                description="You do not have permissions to use this command",
                 color=0xFF0000,
             )
+
             await ctx.send(embed=embed)
             return
 
-        print("Ignoring exception in command {}:".format(ctx.command), file=sys.stderr)
+        print(f"Ignoring exception in command {ctx.command}:", file=sys.stderr)
 
         traceback.print_exception(
             type(error), error, error.__traceback__, file=sys.stderr

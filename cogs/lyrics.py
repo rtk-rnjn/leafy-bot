@@ -23,10 +23,7 @@ class Lyrics(commands.Cog):
             URL = f"https://some-random-api.ml/lyrics?title={words}"
 
             def check_valid_status_code(request):
-                if request.status_code == 200:
-                    return request.json()
-
-                return False
+                return request.json() if request.status_code == 200 else False
 
             def get_song():
                 request = requests.get(URL)

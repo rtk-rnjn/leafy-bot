@@ -55,23 +55,17 @@ class Deck:
     def __init__(self):
         self.deck = []  # start with an empty list
         for suit in suits:
-            for rank in ranks:
-                self.deck.append(
-                    Card(suit, rank)
-                )  # build Card objects and add them to the list
+            self.deck.extend(Card(suit, rank) for rank in ranks)
 
     def __str__(self):
-        deck_comp = ""  # start with an empty string
-        for card in self.deck:
-            deck_comp += "\n " + card.__str__()  # add each Card object's print string
-        return "The deck has:" + deck_comp
+        deck_comp = "".join("\n " + card.__str__() for card in self.deck)
+        return f"The deck has:{deck_comp}"
 
     def shuffle(self):
         random.shuffle(self.deck)
 
     def deal(self):
-        single_card = self.deck.pop()
-        return single_card
+        return self.deck.pop()
 
 
 class Hand:
@@ -238,7 +232,7 @@ class Bj(commands.Cog):
             for x in player_hand.cards:
                 player_cards += str(x) + "\n"
                 total += int(str(x))
-            player_cards += "Total: " + str(total)
+            player_cards += f"Total: {str(total)}"
 
             embed.add_field(name="Player's Hand:", value=player_cards)
             await ctx.send(embed=embed)
@@ -285,7 +279,7 @@ class Bj(commands.Cog):
                 for x in player_hand.cards:
                     player_cards += str(x) + "\n"
                     total += int(str(x))
-                player_cards += "Total: " + str(total)
+                player_cards += f"Total: {str(total)}"
 
                 embed.add_field(name="Player's Hand:", value=player_cards)
                 await ctx.send(embed=embed)
@@ -306,15 +300,15 @@ class Bj(commands.Cog):
 
                 dealer_cards = ""
                 for i in dealer_hand.cards:
-                    dealer_cards += str(i) + " "
+                    dealer_cards += f"{str(i)} "
                 embed.add_field(name="Dealer's Hand:", value=dealer_cards)
 
                 player_cards = ""
                 total = 0
                 for x in player_hand.cards:
-                    player_cards += str(x) + " "
+                    player_cards += f"{str(x)} "
                     total += int(str(x))
-                player_cards += "Total: " + str(total)
+                player_cards += f"Total: {str(total)}"
                 embed.add_field(name="Player's Hand:", value=player_cards)
                 await ctx.send(embed=embed)
 

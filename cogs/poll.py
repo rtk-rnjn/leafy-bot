@@ -39,8 +39,9 @@ class Polls(commands.Cog):
 
         for i in range(20):
             messages.append(
-                await ctx.send(f"Say poll option or pollcancel to publish poll.")
+                await ctx.send("Say poll option or pollcancel to publish poll.")
             )
+
 
             try:
                 entry = await self.client.wait_for("message", check=check, timeout=60.0)
@@ -49,7 +50,7 @@ class Polls(commands.Cog):
 
             messages.append(entry)
 
-            if entry.clean_content.startswith(f"pollcancel"):
+            if entry.clean_content.startswith("pollcancel"):
                 break
 
             answers.append((to_emoji(i), entry.clean_content))

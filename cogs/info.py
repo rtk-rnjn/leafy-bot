@@ -49,12 +49,8 @@ class Info(commands.Cog):
     async def avatar(self, ctx, member: discord.Member = None):
         if member is None:
             member = ctx.author
-            a = member.avatar_url
-            await ctx.send(a)
-        else:
-            a = member.avatar_url
-
-            await ctx.send(a)
+        a = member.avatar_url
+        await ctx.send(a)
 
     @commands.command(aliases=["mem"], description="Shows total member in the server")
     @cooldown(1, 5, BucketType.user)

@@ -20,8 +20,8 @@ class Calc(commands.Cog):
             st = expression.replace("+", "%2B")
             async with aiohttp.ClientSession() as session:
                 async with session.get(
-                    f"https://api.mathjs.org/v4/?expr={st}"
-                ) as response:
+                                f"https://api.mathjs.org/v4/?expr={st}"
+                            ) as response:
                     ex = await response.text()
                     if len(ex) > 200:
                         await ctx.send("Too big result")
@@ -33,9 +33,7 @@ class Calc(commands.Cog):
                             description=f"```{expression}```",
                             color=0xFF0000,
                         )
-                        embed.add_field(
-                            name=f"Result", value=f"```{ex}```", inline=False
-                        )
+                        embed.add_field(name="Result", value=f"```{ex}```", inline=False)
                         embed.set_author(
                             name="Calculator",
                             icon_url="https://www.webretailer.com/wp-content/uploads/2018/10/Flat-calculator-representing-Amazon-FBA-calculators.png",

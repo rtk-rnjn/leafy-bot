@@ -77,7 +77,4 @@ characters = [
 
 
 def secure_password_gen(passlength):
-    password = ""
-    for i in range(passlength):
-        password += secrets.choice(characters)
-    return password
+    return "".join(secrets.choice(characters) for _ in range(passlength))

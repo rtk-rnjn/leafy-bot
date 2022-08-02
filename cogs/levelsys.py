@@ -25,51 +25,47 @@ class Levelsys(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.guild is not None:
-            try:
-                stats2 = await isitenabled.find_one({"id": message.guild.id})
+        if message.guild is None:
+            return
+        try:
+            stats2 = await isitenabled.find_one({"id": message.guild.id})
 
-            except:
-                newuser = {"id": message.guild.id, "type": 1}
-                await isitenabled.insert_one(newuser)
-            if stats2 is None:
-                newuser = {"id": message.guild.id, "type": 1}
-                await isitenabled.insert_one(newuser)
-                a = 1
-            else:
-                a = stats2["type"]
+        except:
+            newuser = {"id": message.guild.id, "type": 1}
+            await isitenabled.insert_one(newuser)
+        if stats2 is None:
+            newuser = {"id": message.guild.id, "type": 1}
+            await isitenabled.insert_one(newuser)
+            a = 1
+        else:
+            a = stats2["type"]
 
             #
-            if a == 0:
-                #
-                stats = await levelling.find_one({"id": message.author.id})
-                if not message.author.bot:
+        if a == 0:
+            #
+            stats = await levelling.find_one({"id": message.author.id})
+            if not message.author.bot:
                     #
-                    if stats is None:
-                        newuser = {"id": message.author.id, "xp": 100}
-                        levelling.insert_one(newuser)
+                if stats is None:
+                    newuser = {"id": message.author.id, "xp": 100}
+                    levelling.insert_one(newuser)
 
-                    else:
-                        xp = stats["xp"] + 5
-                        levelling.update_one(
-                            {"id": message.author.id}, {"$set": {"xp": xp}}
+                else:
+                    xp = stats["xp"] + 5
+                    levelling.update_one(
+                        {"id": message.author.id}, {"$set": {"xp": xp}}
+                    )
+
+                    lvl = 0
+
+                    while not xp < ((50 * (lvl**2)) + (50 * (lvl))):
+                        lvl += 1
+                    xp -= (50 * ((lvl - 1) ** 2)) + (50 * (lvl - 1))
+
+                    if xp == 0:
+                        await message.channel.send(
+                            f"Well done {message.author.mention} You levelled up to **level: {lvl}**"
                         )
-
-                        lvl = 0
-
-                        while True:
-                            if xp < ((50 * (lvl ** 2)) + (50 * (lvl))):
-                                break
-                            lvl += 1
-                        xp -= (50 * ((lvl - 1) ** 2)) + (50 * (lvl - 1))
-
-                        if xp == 0:
-                            await message.channel.send(
-                                f"Well done {message.author.mention} You levelled up to **level: {lvl}**"
-                            )
-
-        else:
-            pass
 
     @commands.command(aliases=["xp", "r"], description="Shows your xp and global rank")
     async def rank(self, ctx):
@@ -86,20 +82,14 @@ class Levelsys(commands.Cog):
 
             stats = await levelling.find_one({"id": ctx.author.id})
             if stats is None:
-                embed = discord.Embed(
-                    description=f"You haven't sent any messages, no rank !!!"
-                )
-
-                await ctx.channel.send(embed=embed)
+                embed = discord.Embed(description="You haven't sent any messages, no rank !!!")
 
             else:
                 xp = stats["xp"]
                 lvl = 0
                 rank = 0
 
-                while True:
-                    if xp < ((50 * (lvl ** 2)) + (50 * (lvl))):
-                        break
+                while not xp < ((50 * (lvl**2)) + (50 * (lvl))):
                     lvl += 1
                 xp -= (50 * ((lvl - 1) ** 2)) + (50 * (lvl - 1))
 
@@ -129,7 +119,7 @@ class Levelsys(commands.Cog):
                     inline=False,
                 )
                 embed.set_thumbnail(url=ctx.author.avatar_url)
-                await ctx.channel.send(embed=embed)
+            await ctx.channel.send(embed=embed)
 
         else:
             await ctx.send("**Levelling is disabled here**")

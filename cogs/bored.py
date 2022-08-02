@@ -15,17 +15,14 @@ class Boring(commands.Cog):
         description="Sends you a activity which you can do while you are bored"
     )
     async def activity(self, ctx, persons=1):
-        if persons == None:
+        if persons is None:
             await ctx.send("You forgot person value")
         else:
             persons = str(persons)
             URL = f"https://www.boredapi.com/api/activity/?participants={persons}"
 
             def check_valid_status_code(request):
-                if request.status_code == 200:
-                    return request.json()
-
-                return False
+                return request.json() if request.status_code == 200 else False
 
             def get_activity():
                 request = requests.get(URL)

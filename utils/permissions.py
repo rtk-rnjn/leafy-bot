@@ -40,11 +40,8 @@ async def check_priv(ctx, member):
             return False
 
         # Now permission check
-        if member.id in owners:
-            if ctx.author.id not in owners:
-                return await ctx.send(f"I can't {ctx.command.name} my creator ;-;")
-            else:
-                pass
+        if member.id in owners and ctx.author.id not in owners:
+            return await ctx.send(f"I can't {ctx.command.name} my creator ;-;")
         if member.id == ctx.guild.owner.id:
             return await ctx.send(f"You can't {ctx.command.name} the owner, lol")
         if ctx.author.top_role == member.top_role:

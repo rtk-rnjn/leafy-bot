@@ -13,9 +13,7 @@ class plural:
         v = self.value
         singular, sep, plural = format_spec.partition("|")
         plural = plural or f"{singular}s"
-        if abs(v) != 1:
-            return f"{v} {plural}"
-        return f"{v} {singular}"
+        return f"{v} {plural}" if abs(v) != 1 else f"{v} {singular}"
 
 
 class RNG(commands.Cog):
@@ -73,12 +71,14 @@ class RNG(commands.Cog):
             times = (len(choices) ** 2) + 1
 
         times = min(10001, max(1, times))
-        results = Counter(rng.choice(choices) for i in range(times))
+        results = Counter(rng.choice(choices) for _ in range(times))
         builder = []
         if len(results) > 10:
             builder.append("Only showing top 10 results...")
-        for index, (elem, count) in enumerate(results.most_common(10), start=1):
-            builder.append(f"{index}. {elem} ({plural(count):time}, {count/times:.2%})")
+        builder.extend(
+            f"{index}. {elem} ({plural(count):time}, {count/times:.2%})"
+            for index, (elem, count) in enumerate(results.most_common(10), start=1)
+        )
 
         await ctx.send("\n".join(builder))
 

@@ -43,11 +43,8 @@ class Wiki(commands.Cog):
             content = wikipedia.search(msg, results=5, suggestion=True)
             content = content[0]
             embed = discord.Embed(title="Search Results", color=0xFF0000)
-            z = 1
-            for i in content:
+            for z, i in enumerate(content, start=1):
                 embed.add_field(name="\u200b", value=f"{z}-{i}", inline=False)
-                z += 1
-
             await ctx.send(embed=embed)
         except:
             await ctx.send("**Failed to get information**")

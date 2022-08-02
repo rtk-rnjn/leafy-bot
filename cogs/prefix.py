@@ -37,7 +37,6 @@ class Prefix(commands.Cog):
                 description="Looks like the prefix is very big <:nah:796621598752899072>",
                 color=0xFF0000,
             )
-            await ctx.send(embed=embed)
         else:
 
             new_prefix = str(new_prefix)
@@ -51,8 +50,6 @@ class Prefix(commands.Cog):
                     description=f"This server prefix is now {new_prefix}",
                     color=0xFF0000,
                 )
-                await ctx.send(embed=embed)
-
             else:
                 await predb.update_one(
                     {"guild": ctx.guild.id}, {"$set": {"prefix": new_prefix}}
@@ -64,7 +61,8 @@ class Prefix(commands.Cog):
                     description=f"This server prefix is now {new_prefix}",
                     color=0xFF0000,
                 )
-                await ctx.send(embed=embed)
+
+        await ctx.send(embed=embed)
 
 
 def setup(client):
